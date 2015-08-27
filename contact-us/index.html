@@ -1,4 +1,4 @@
-<!DOCTYPE html> 
+<!DOCTYPE html>
 <!--[if lt IE 7 ]><html class="no-js ie ie6" lang="en" prefix="og: http://ogp.me/ns#"> <![endif]-->
 <!--[if IE 7 ]><html class="no-js ie ie7" lang="en" prefix="og: http://ogp.me/ns#"> <![endif]-->
 <!--[if IE 8 ]><html class="no-js ie ie8" lang="en" prefix="og: http://ogp.me/ns#"> <![endif]-->
@@ -172,6 +172,50 @@
         /* <![CDATA[ */
         var _wpcf7 = {"loaderUrl":"http:\/\/www.isgm.com.au\/wp-content\/plugins\/contact-form-7\/images\/ajax-loader.gif","sending":"Sending ..."};
 /* ]]> */
+    </script>
+    <script type='text/javascript'>
+        jQuery(function() {
+            var form = jQuery('.wpcf7-form');
+
+            var formMessages = jQuery('.wpcf7-response-output');
+
+            var _wpcf7 = {"loaderUrl":"http:\/\/www.isgm.com.au\/wp-content\/plugins\/contact-form-7\/images\/ajax-loader.gif","sending":"Sending ..."};
+
+            jQuery(form).submit(function(event) {
+                jQuery(form).find('img.ajax-loader').css({visibility: 'visible'});
+                event.preventDefault();
+                var formData = jQuery(form).serialize();
+                jQuery.ajax({
+                    type: 'POST',
+                    url: jQuery(form).attr('action'),
+                    data: formData
+                }).done(function(response) {
+                    // Make sure that the formMessages div has the 'success' class.
+                    jQuery(formMessages).removeClass('error');
+                    jQuery(formMessages).addClass('success');
+                    jQuery(form).find('img.ajax-loader').css({visibility: 'hidden'})
+                        // Set the message text.
+                        jQuery(formMessages).text(response);
+
+                    // Clear the form.
+                    jQuery('.wpcf7-text').val('');
+                }).fail(function(data) {
+                    // Make sure that the formMessages div has the 'error' class.
+                    jQuery(formMessages).removeClass('success');
+                    jQuery(formMessages).addClass('error');
+
+                    jQuery(form).find('img.ajax-loader').css({visibility: 'hidden'})
+                        // Set the message text.
+                        if (data.responseText !== '') {
+                            jQuery(formMessages).text(data.responseText);
+                        } else {
+                            jQuery(formMessages).text('Oops! An error occured and your message could not be sent.');
+                        }
+                });
+
+            });
+        });
+
     </script>
     <script type='text/javascript' src='../wp-content/plugins/contact-form-7/includes/js/scripts.js'></script>
     <script type='text/javascript' src='http://www.isgm.com.au/wp-includes/js/comment-reply.min.js'></script>
